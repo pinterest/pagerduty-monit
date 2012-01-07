@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# pagerduty-resolve is a wrapper around the PagerDuty API to close an incident
+# from the command line.
+#
+# Copyright (c) 2012 Cold Brew Labs, Inc. See LICENSE.md for details.
+
+# Uncomment and enter your service key here.
+# PAGERDUTY_SERVICE_KEY="1234567890abcdef1234567890abcdef"
+
+if [ -z "$1" ]; then
+  echo "Usage: $0 <event>"
+  exit 1
+elif [ -z "$PAGERDUTY_SERVICE_KEY" ]; then
+  echo "Failed to resolve event: you must set the PAGERDUTY_SERVICE_KEY variable."
+  exit 1
+elif [ ! -e "/usr/local/bin/pagerduty" ]; then
+  echo "Failed to resolve event: /usr/local/bin/pagerduty does not exist or is not executable."
+  exit 1
+fi
+
+EVENT=$1
+HOST=`hostname -s`
+INCIDENT_KEY=`echo "$HOST:$EVENT" | md5sum | cut -f 1 -d ' '`
+TMP_FILE="/tmp/pagerduty-$INCIDENT_KEY"
+
+DESCRIPTION="$EVENT resolved on $HOST"
+
+rm -f $TMP_FILE
+/usr/local/bin/pagerduty -k "$PAGERDUTY_SERVICE_KEY" -i "$INCIDENT_KEY" --description="$DESCRIPTION" resolve
+
+if [ "$?" -ne "0" ]; then
+  echo "Failed to resolve incident"
+  exit 1
+fi
+
+echo "Incident resolved successfully"
+exit 0
