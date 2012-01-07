@@ -4,7 +4,7 @@ The scripts in this repository are wrappers for the PagerDuty API which will
 open and close PagerDuty incidents from the command line. These scripts are
 designed to help you integrate monit with PagerDuty.
 
-Copyright (c) 2012 Cold Brew Labs, Inc. See LICENSE.md for details.
+Copyright (c) 2012 Cold Brew Labs, Inc. See LICENSE for details.
 
 **Usage:** `pagerduty-trigger <service-name>`
 

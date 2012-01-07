@@ -3,7 +3,7 @@
 # pagerduty-resolve is a wrapper around the PagerDuty API to close an incident
 # from the command line.
 #
-# Copyright (c) 2012 Cold Brew Labs, Inc. See LICENSE.md for details.
+# Copyright (c) 2012 Cold Brew Labs, Inc. See LICENSE for details.
 
 # Uncomment and enter your service key here.
 # PAGERDUTY_SERVICE_KEY="1234567890abcdef1234567890abcdef"
