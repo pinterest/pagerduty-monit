@@ -15,7 +15,7 @@ if [ -z "$1" ]; then
 elif [ -z "$PAGERDUTY_SERVICE_KEY" ]; then
   echo "Failed to trigger event: you must set the PAGERDUTY_SERVICE_KEY variable."
   exit 1
-elif [ ! -e "/usr/local/bin/pagerduty" ]; then
+elif [ ! -x "/usr/local/bin/pagerduty" ]; then
   echo "Failed to trigger event: /usr/local/bin/pagerduty does not exist or is not executable."
   exit 1
 fi
