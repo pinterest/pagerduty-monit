@@ -9,6 +9,18 @@
 # Uncomment and enter your service key here.
 # PAGERDUTY_SERVICE_KEY="1234567890abcdef1234567890abcdef"
 
+# http://mmonit.com/monit/documentation/monit.html
+# Monit standard envirionment variables 
+# MONIT_EVENT: The event that occurred on the service
+# MONIT_DESCRIPTION : A description of the error condition
+# MONIT_SERVICE : The name of the service (from monitrc) on which the event occurred.
+# MONIT_DATE : The time and date (RFC 822 style) the event occurred
+# MONIT_HOST : The host the event occurred on
+# The following environment variables are only available for process service entries:
+#  MONIT_PROCESS_PID: The process pid. This may be 0 if the process was (re)started,
+#  MONIT_PROCESS_MEMORY : Process memory. This may be 0 if the process was (re)started,
+#  MONIT_PROCESS_CHILDREN : Process children. This may be 0 if the process was (re)started,
+#  MONIT_PROCESS_CPU_PERCENT : Process cpu%. This may be 0 if the process was (re)started,
 if [ -z "$1" ]; then
   echo "Usage: $0 <event>"
   exit 1
@@ -21,7 +33,10 @@ elif [ ! -x "/usr/local/bin/pagerduty" ]; then
 fi
 
 EVENT="$1"
-HOST=`hostname -s`
+HOST=$MONIT_HOST
+if [ -z $HOST ] ; then
+   HOST=`hostname -s`
+fi 
 INCIDENT_KEY=`echo "$HOST:$EVENT" | md5sum | cut -f 1 -d ' '`
 TMP_FILE="/tmp/pagerduty-$INCIDENT_KEY"
 
@@ -35,7 +50,10 @@ if [ -f "$TMP_FILE" ]; then
   fi
 fi
 
-DESCRIPTION="$EVENT failed on $HOST"
+DESCRIPTION=$MONIT_DESCRIPTION
+if [ -z $DESCRIPTION ] then ;
+   DESCRIPTION="$EVENT failed on $HOST"
+fi
 DATE=`date`
 
 echo "$DATE: $DESCRIPTION" >> $TMP_FILE
