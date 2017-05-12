@@ -1,3 +1,7 @@
+**Note:** This project is no longer actively maintained by Pinterest.
+
+---
+
 ## pagerduty-monit
 
 The scripts in this repository are wrappers for the PagerDuty API which will
