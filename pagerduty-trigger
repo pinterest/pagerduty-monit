@@ -9,15 +9,26 @@
 # Uncomment and enter your service key here.
 # PAGERDUTY_SERVICE_KEY="1234567890abcdef1234567890abcdef"
 
+PAGERDUTY_PATHS="/usr/bin/pagerduty /usr/local/bin/pagerduty"
+
 if [ -z "$1" ]; then
   echo "Usage: $0 <event>"
   exit 1
-elif [ -z "$PAGERDUTY_SERVICE_KEY" ]; then
-  echo "Failed to trigger event: you must set the PAGERDUTY_SERVICE_KEY variable."
+fi
+if [ -z "$PAGERDUTY_SERVICE_KEY" ]; then
+  echo "Failed to resolve event: you must set the PAGERDUTY_SERVICE_KEY variable."
   exit 1
-elif [ ! -x "/usr/local/bin/pagerduty" ]; then
-  echo "Failed to trigger event: /usr/local/bin/pagerduty does not exist or is not executable."
-  exit 1
+fi
+
+for binpath in $PAGERDUTY_PATHS; do
+  if [ -x $binpath ]; then
+    pagerduty_cmd=$binpath
+    break
+  fi
+done
+
+if [ -z $pagerduty_cmd ]; then
+  echo "Could not trigger event: no pagerduty found in ${PAGERDUTY_PATHS}";
 fi
 
 EVENT="$1"
